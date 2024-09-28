@@ -1,4 +1,9 @@
 import { Client, GatewayIntentBits, type TextChannel, type Message } from "discord.js";
+import * as dotenv from "dotenv";
+import { initializeApiServer } from './api-server';
+
+dotenv.config();
+
 const client = new Client({
 	intents: [
 		GatewayIntentBits.Guilds,
@@ -6,15 +11,11 @@ const client = new Client({
 		GatewayIntentBits.MessageContent,
 	],
 });
-import * as dotenv from "dotenv";
-
-dotenv.config();
-
 const TOKEN = process.env.TOKEN;
-
 
 client.on("ready", () => {
 	console.log(`Logged in as ${client.user?.tag}!`);
+	initializeApiServer(client);
 });
 
 // Add this new event listener for messages
