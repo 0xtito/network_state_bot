@@ -1,6 +1,6 @@
 import { Client, GatewayIntentBits, type TextChannel, type Message } from "discord.js";
 import * as dotenv from "dotenv";
-import { initializeApiServer } from './api-server';
+import { initializeApiServer } from '@/api/api-server';
 
 dotenv.config();
 

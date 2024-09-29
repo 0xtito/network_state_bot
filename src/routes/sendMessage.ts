@@ -8,7 +8,6 @@ import {
   SendMessageResponse,
   ErrorResponse,
 } from '@/schemas/sendMessage';
-import { errorSchema } from '@/schemas/errors';
 
 export default function sendMessageRoute(fastify: FastifyInstance, discordClient: Client) {
   fastify.post<{

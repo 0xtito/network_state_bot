@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import { Client } from 'discord.js';
-import { initializeApiServer } from './api-server';
+import { initializeApiServer } from '../src/api/api-server';
 
 // Mock Discord.js Client
 jest.mock('discord.js', () => ({

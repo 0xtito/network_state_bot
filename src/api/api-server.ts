@@ -24,9 +24,12 @@ export function initializeApiServer(discordClient: Client): FastifyInstance {
     });
   });
 
+  // Use a relative path from the project root to the routes directory
+  const routesDir = path.join(process.cwd(), 'src', 'routes');
+
   // Automatically load all route files in the 'routes' folder
   fastify.register(autoLoad, {
-    dir: path.join(__dirname, 'routes'),
+    dir: routesDir,
     options: { discordClient },
   });
 
