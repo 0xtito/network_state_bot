@@ -12,9 +12,7 @@ export const sendMessageResponseSchema = z.object({
   content: z.string(),
 });
 
-// Infer TypeScript types from Zod schemas
 export type SendMessageBody = z.infer<typeof sendMessageSchema>;
 export type SendMessageResponse = z.infer<typeof sendMessageResponseSchema>;
 
-// Re-export ErrorResponse
 export { ErrorResponse };

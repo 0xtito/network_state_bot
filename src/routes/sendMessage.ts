@@ -1,38 +1,50 @@
-import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
-import { type Client, TextChannel } from 'discord.js';
-import { zodToJsonSchema } from 'zod-to-json-schema';
+import { FastifyPluginAsync } from "fastify";
+import { TextChannel } from "discord.js";
+import { zodToJsonSchema } from "zod-to-json-schema";
 import {
   sendMessageSchema,
   sendMessageResponseSchema,
   SendMessageBody,
   SendMessageResponse,
   ErrorResponse,
-} from '@/schemas/sendMessage';
+} from "../schemas/sendMessage";
 
-export default function sendMessageRoute(fastify: FastifyInstance, discordClient: Client) {
+import type { Client } from "discord.js";
+
+const sendMessageRoute: FastifyPluginAsync<{ discordClient: Client }> = async (
+  fastify,
+  opts
+) => {
+  const { discordClient } = opts;
+
   fastify.post<{
     Body: SendMessageBody;
     Reply: SendMessageResponse | ErrorResponse;
   }>(
-    '/messages/send',
+    "/messages/send",
     {
       schema: {
         body: zodToJsonSchema(sendMessageSchema),
         response: {
           200: {
-            description: 'Successful response',
+            description: "Successful response",
             ...zodToJsonSchema(sendMessageResponseSchema),
           },
         },
       },
     },
-    async (request: FastifyRequest<{ Body: SendMessageBody }>, reply: FastifyReply) => {
+    async (request, reply) => {
       try {
-        const { channelId, content, replyToId } = sendMessageSchema.parse(request.body);
+        const { channelId, content, replyToId } = sendMessageSchema.parse(
+          request.body
+        );
 
         const channel = await discordClient.channels.fetch(channelId);
         if (!channel || !(channel instanceof TextChannel)) {
-          return reply.code(404).send({ error: 'Channel not found or is not a text channel' });
+          return reply.code(404).send({
+            message: "Channel not found or is not a text channel",
+            error: "Channel not found or is not a text channel",
+          });
         }
 
         const messageOptions = {
@@ -48,8 +60,13 @@ export default function sendMessageRoute(fastify: FastifyInstance, discordClient
         });
       } catch (error) {
         fastify.log.error(error);
-        return reply.code(400).send({ error: 'Invalid request or unexpected error occurred' });
+        return reply.code(400).send({
+          message: "Invalid request or unexpected error occurred",
+          error: "Invalid request or unexpected error occurred",
+        });
       }
     }
   );
-}
+};
+
+export default sendMessageRoute;
