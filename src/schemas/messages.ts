@@ -13,16 +13,29 @@ export const authorSchema = z.object({
   username: z.string().min(1).max(50),
 });
 
+export const authorSchemaJson = z.unknown({ description: "Author json schema" })
+
 export const messageResponseSchema = z.object({
   id: z.string().uuid(),
+  channel_id: z.string().uuid(),
   content: z.string().min(1).max(2000),
   author: authorSchema,
   timestamp: z.string().datetime(),
 });
 
+export const jsonMessageResponseSchema = z.object({
+  id: z.string().uuid(),
+  channel_id: z.string().uuid(),
+  content: z.string().min(1).max(2000),
+  author: authorSchemaJson,
+  timestamp: z.string().datetime(),
+});
+
+
 // Infer TypeScript types from Zod schemas
 export type RetrieveMessagesBody = z.infer<typeof retrieveMessagesSchema>;
 export type MessageResponse = z.infer<typeof messageResponseSchema>;
+export type JsonMessageResponse = z.infer<typeof jsonMessageResponseSchema>;
 
 // Re-export ErrorResponse
 export { ErrorResponse };
